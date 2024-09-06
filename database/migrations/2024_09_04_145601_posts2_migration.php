@@ -11,13 +11,15 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('users', function (Blueprint $table) {
+        Schema::create('posts2', function (Blueprint $table) {
             $table->id();
-            $table->string('name');
-            $table->string('email')->unique();
-            $table->enum('role', ['admin', 'editor', 'viewer'])->default('viewer'); // Enum column
-            $table->string('password');
+            $table->unsignedBigInteger('user_id');
+            $table->string('title');
+            $table->text('content');
+            $table->enum('status', ['draft', 'published', 'archived'])->default('draft'); // Enum column
             $table->timestamps();
+
+            $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
         });
     }
 
@@ -26,6 +28,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('users');
+        Schema::dropIfExists('posts2');
     }
 };

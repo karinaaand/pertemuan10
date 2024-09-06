@@ -3,6 +3,8 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\pertemuan1;
 use App\Http\Controllers\PostController;
+use App\Http\Controllers\users;
+use App\Http\Controllers\posts2;
 
 
 
@@ -59,3 +61,8 @@ Route::get('about2', function () {
 })->name('about');
 
 Route::get('/posts', [PostController::class, 'index']);
+
+/*Tugas praktikum 4 */
+Route::get('/users', [users::class, 'index']);
+
+Route::get('/posts2', [posts2::class, 'index']);
