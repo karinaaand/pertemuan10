@@ -5,6 +5,7 @@ use App\Http\Controllers\pertemuan1;
 use App\Http\Controllers\PostController;
 use App\Http\Controllers\users;
 use App\Http\Controllers\posts2;
+use App\Http\Controllers\BukuController;
 
 
 
@@ -66,3 +67,6 @@ Route::get('/posts', [PostController::class, 'index']);
 Route::get('/users', [users::class, 'index']);
 
 Route::get('/posts2', [posts2::class, 'index']);
+
+/*Pertemuan 5*/
+Route::get('/buku', [BukuController::class, 'index']);
