@@ -7,6 +7,6 @@
     <title>Users</title>
 </head>
 <body>
-    <h1>User</h1>
+    <h1>Users</h1>
 </body>
 </html>
