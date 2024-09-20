@@ -68,5 +68,10 @@ Route::get('/users', [users::class, 'index']);
 
 Route::get('/posts2', [posts2::class, 'index']);
 
-/*Pertemuan 5*/
+/*Pertemuan 5 dan 6*/
 Route::get('/buku', [BukuController::class, 'index']);
+Route::get('/buku/create', [BukuController::class, 'create'])->name('buku.create');
+Route::post('/buku', [BukuController::class, 'store'])->name('buku.store');
+Route::delete('/buku/{id}', [BukuController::class, 'destroy'])->name('buku.destroy');
+Route::put('/buku/{id}', [BukuController::class, 'update'])->name('buku.update');
+Route::get('/buku/{id}', [BukuController::class, 'edit'])->name('buku.edit');

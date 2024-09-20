@@ -5,12 +5,20 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>Daftar Buku</title>
-    <!-- Menambahkan Bootstrap CSS -->
+    <!-- Bootstrap CSS -->
     <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        /* CSS for centering the table header */
+        .text-center-header {
+            text-align: center;
+        }
+    </style>
 </head>
 <body>
     <div class="container mt-5">
-        <h1 class="text-center mb-4">Daftar Buku</h1>
+        <!-- Button moved above the table -->
+        <a href="{{ route('buku.create') }}" class="btn btn-primary mb-3">Tambah Buku</a>
+        <h1 class="text-center-header mb-4">Daftar Buku</h1> <!-- CSS class added for centering header -->
         <table class="table table-striped table-bordered">
             <thead class="thead-dark">
                 <tr>
@@ -31,7 +39,12 @@
                         <td>{{ "Rp. ".number_format($buku->harga, 2, ',', '.') }}</td>
                         <td>{{ \Carbon\Carbon::parse($buku->tgl_terbit)->format('d-m-Y') }}</td>
                         <td>
-                            <!-- Tombol Detail -->
+                            <a href="{{ route('buku.edit', $buku->id) }}" class="btn btn-warning btn-sm">Edit</a>
+                            <form action="{{ route('buku.destroy', $buku->id) }}" method="POST" style="display:inline-block;">
+                                @csrf
+                                @method('DELETE')
+                                <button onclick="return confirm('Yakin mau di hapus?')" type="submit" class="btn btn-danger btn-sm">Hapus</button>
+                            </form>
                             <button class="btn btn-info btn-sm" data-toggle="modal" data-target="#detailModal"
                                     onclick="showDetail('{{ $buku->judul }}', '{{ $buku->penulis }}', '{{ $buku->harga }}', '{{ \Carbon\Carbon::parse($buku->tgl_terbit)->format('d-m-Y') }}')">Detail</button>
                         </td>
@@ -39,15 +52,14 @@
                 @endforeach
             </tbody>
         </table>
-
-        <!-- Menambahkan bagian untuk menampilkan jumlah total buku dan total harga buku -->
+        <!-- Display total number of books and total price -->
         <div class="alert alert-primary" role="alert">
             <p><strong>Jumlah Total Buku:</strong> {{ $total_buku }}</p>
             <p><strong>Jumlah Total Harga:</strong> {{ "Rp. ".number_format($total_harga, 2, ',', '.') }}</p>
         </div>
     </div>
 
-    <!-- Modal untuk menampilkan detail buku -->
+    <!-- Detail Modal -->
     <div class="modal fade" id="detailModal" tabindex="-1" aria-labelledby="detailModalLabel" aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content">
@@ -64,13 +76,13 @@
                     <p><strong>Tanggal Terbit:</strong> <span id="modalTanggalTerbit"></span></p>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Tutup</button>
                 </div>
             </div>
         </div>
     </div>
 
-    <!-- Menambahkan Bootstrap JS dan dependencies -->
+    <!-- Bootstrap JS and dependencies -->
     <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.3/dist/umd/popper.min.js"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
@@ -82,5 +94,3 @@
             document.getElementById('modalTanggalTerbit').innerText = tanggal_terbit;
         }
     </script>
-</body>
-</html>
