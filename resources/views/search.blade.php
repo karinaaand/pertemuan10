@@ -34,12 +34,6 @@
         <!-- Header Title -->
         <h1 class="text-center-header mb-4">Daftar Buku</h1>
 
-        {{-- <form action="{{ route('buku.search') }}" method="get">
-            @csrf
-            <input type="text" name="kata" class="form-control" placeholder="Cari ..."
-                   style="width: 30%; display: inline; margin-top: 10px; margin-bottom: 10px; float: right;">
-        </form> --}}
-
         <!-- Table for Book Data -->
         <table id="myTable" class="table table-striped table-bordered">
             <thead class="thead-dark">
@@ -126,10 +120,10 @@
             document.getElementById('modalTanggalTerbit').innerText = tanggal_terbit;
         }
 
-    //     // Initialize DataTables
-    //     $(document).ready(function() {
-    //         $('#myTable').DataTable();
-    //     });
-    // </script>
+        // Initialize DataTables
+        $(document).ready(function() {
+            $('#myTable').DataTable();
+        });
+    </script>
 </body>
 </html>

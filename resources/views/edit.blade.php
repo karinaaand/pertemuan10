@@ -31,7 +31,7 @@
 
             <div class="form-group">
                 <label for="tgl_terbit">Tanggal Terbit</label>
-                <input type="date" class="form-control" id="tgl_terbit" name="tgl_terbit" value="{{ $buku->tgl_terbit }}">
+                <input type="text" class="date form-control" id="tgl_terbit" name="tgl_terbit" placeholder="yyyy/mm/dd"  value="{{ $buku->tgl_terbit }}">
             </div>
 
             <button type="submit" class="btn btn-primary">Update Buku</button>
