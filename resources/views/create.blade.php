@@ -35,7 +35,7 @@
             </div>
             <div class="mb-3">
                 <label for="tgl_terbit" class="form-label">Tanggal Terbit</label>
-                <input type="text" class="date form-control" id="tgl_terbit" name="tgl_terbit" placeholder="yyyy/mm/dd">
+                <input type="date" class="date form-control" id="tgl_terbit" name="tgl_terbit" placeholder="yyyy/mm/dd">
             </div>
             <button type="submit" class="btn btn-primary">Simpan</button>
             <a href="{{ '/buku' }}" class="btn btn-secondary">Kembali</a>

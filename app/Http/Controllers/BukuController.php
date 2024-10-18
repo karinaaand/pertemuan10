@@ -13,20 +13,20 @@ class BukuController extends Controller
      * Display a listing of the resource.
      */
     // DataTables
-    // public function index()
-    // {
+    public function indexdatatable()
+    {
 
-    //     Paginator::useBootstrapFive();
-    //     $data_buku = Buku::orderBy('id', 'desc')->get(); // Ambil semua data buku yang sudah diurutkan
-    //     $total_buku = $data_buku->count(); // Menghitung jumlah total buku
-    //     $total_harga = $data_buku->sum('harga'); // Menghitung jumlah total harga buku
-    //     return view('index', compact('data_buku', 'total_buku', 'total_harga'));
+        Paginator::useBootstrapFive();
+        $data_buku = Buku::orderBy('id', 'desc')->get(); // Ambil semua data buku yang sudah diurutkan
+        $total_buku = $data_buku->count(); // Menghitung jumlah total buku
+        $total_harga = $data_buku->sum('harga'); // Menghitung jumlah total harga buku
+        return view('indexdatatable', compact('data_buku', 'total_buku', 'total_harga'));
 
-    // }
+    }
 
     //N0 3 tugas praktikum
     public function index(){
-        $batas = 5;
+        $batas = 10;
         $total_buku = Buku::count();
         $data_buku = Buku::orderBy('id', 'desc')->paginate($batas);
         $no = $batas * ($data_buku->currentPage() - 1);
@@ -43,10 +43,16 @@ class BukuController extends Controller
                          ->orWhere('penulis', 'like', "%" . $cari . "%")
                          ->paginate($batas);
 
+        $total_harga = 0;
+        foreach($data_buku as $buku){
+            $total_harga+=$buku->harga;
+        }
+
         $total_buku = $data_buku->count();
         $no = $batas * ($data_buku->currentPage() - 1);
+        // dd($data_buku);
 
-        return view('search', compact('total_buku', 'data_buku', 'no', 'cari'));
+        return view('search', compact('total_buku', 'data_buku', 'no', 'cari', 'total_harga'));
     }
 
 

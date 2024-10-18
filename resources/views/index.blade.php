@@ -22,6 +22,7 @@
         @csrf
         <input type="text" name="kata" class="form-control" placeholder="Cari ..."
             style="width: 30%; display: inline; margin-top: 10px; margin-bottom: 10px; float: right;">
+        <button type="submit" class="btn btn-primary">Cari</button> <!-- Tombol submit harus ada -->
     </form>
     <!-- Session Message -->
     @if(@Session::has('pesan'))
@@ -39,6 +40,10 @@
             <input type="text" name="kata" class="form-control" placeholder="Cari ..."
                    style="width: 30%; display: inline; margin-top: 10px; margin-bottom: 10px; float: right;">
         </form> --}}
+
+         <!-- Bagian yang ditambahkan setelah @section('content') -->
+         @section('content')
+
 
         <!-- Table for Book Data -->
         <table id="myTable" class="table table-striped table-bordered">
@@ -75,6 +80,8 @@
             </tbody>
         </table>
 
+        {{ $data_buku->appends(request()->except('page'))->links() }}
+
         <!-- Total Books and Total Price -->
         <div class="alert alert-primary" role="alert">
             <p><strong>Jumlah Total Buku:</strong> {{ $total_buku }}</p>
@@ -110,6 +117,7 @@
 
     </div>
 
+
     <!-- Scripts -->
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.3/dist/umd/popper.min.js"></script>
@@ -126,10 +134,10 @@
             document.getElementById('modalTanggalTerbit').innerText = tanggal_terbit;
         }
 
-    //     // Initialize DataTables
-    //     $(document).ready(function() {
-    //         $('#myTable').DataTable();
-    //     });
-    // </script>
+         // Initialize DataTables
+        // $(document).ready(function() {
+        //     $('#myTable').DataTable();
+        // });
+    </script>
 </body>
 </html>

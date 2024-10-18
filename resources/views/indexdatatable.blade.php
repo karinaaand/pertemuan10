@@ -18,11 +18,7 @@
     </style>
 </head>
 <body>
-    <form action="{{ route('buku.search') }}" method="get">
-        @csrf
-        <input type="text" name="kata" class="form-control" placeholder="Cari ..."
-            style="width: 30%; display: inline; margin-top: 10px; margin-bottom: 10px; float: right;">
-    </form>
+
     <!-- Session Message -->
     @if(@Session::has('pesan'))
         <div class="alert alert-success">{{ Session::get('pesan') }}</div>
@@ -39,20 +35,6 @@
             <input type="text" name="kata" class="form-control" placeholder="Cari ..."
                    style="width: 30%; display: inline; margin-top: 10px; margin-bottom: 10px; float: right;">
         </form> --}}
-
-         <!-- Bagian yang ditambahkan setelah @section('content') -->
-         @section('content')
-         @if(count($data_buku))
-             <div class="alert alert-success">
-                 Ditemukan <strong>{{ count($data_buku) }}</strong> data dengan kata:
-                 <strong>{{ $cari }}</strong>
-             </div>
-         @else
-             <div class="alert alert-warning">
-                 <h4>Data {{ $cari }} tidak ditemukan</h4>
-                 <a href="/buku" class="btn btn-warning">Kembali</a>
-             </div>
-         @endif
 
         <!-- Table for Book Data -->
         <table id="myTable" class="table table-striped table-bordered">
@@ -140,10 +122,10 @@
             document.getElementById('modalTanggalTerbit').innerText = tanggal_terbit;
         }
 
-        // // Initialize DataTables
-        // $(document).ready(function() {
-        //     $('#myTable').DataTable();
-        // });
+        // Initialize DataTables
+        $(document).ready(function() {
+            $('#myTable').DataTable();
+        });
     </script>
 </body>
 </html>

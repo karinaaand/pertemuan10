@@ -70,9 +70,10 @@ Route::get('/posts2', [posts2::class, 'index']);
 
 /*Pertemuan 5 dan 6*/
 Route::get('/buku', [BukuController::class, 'index']);
+Route::get('/bukudatatable', [BukuController::class, 'indexdatatable']);
 Route::get('/buku/create', [BukuController::class, 'create'])->name('buku.create');
 Route::post('/buku', [BukuController::class, 'store'])->name('buku.store');
 Route::delete('/buku/{id}', [BukuController::class, 'destroy'])->name('buku.destroy');
-Route::put('/buku/{id}', [BukuController::class, 'update'])->name('buku.update');
-Route::get('/buku/{id}', [BukuController::class, 'edit'])->name('buku.edit');
-Route::get('/buku/search', 'BukuController@search')->name('buku.search');
+Route::put('/buku/edit/{id}', [BukuController::class, 'update'])->name('buku.update');
+Route::get('/buku/edit/{id}', [BukuController::class, 'edit'])->name('buku.edit');
+Route::get('/buku/search', [BukuController::class, 'search'])->name('buku.search');
