@@ -19,13 +19,12 @@
 </head>
 <body>
 
-    <!-- Session Message -->
-    @if(@Session::has('pesan'))
-        <div class="alert alert-success">{{ Session::get('pesan') }}</div>
-    @endif
+
     <div class="container mt-5">
-        <!-- Add Book Button -->
-        <a href="{{ route('buku.create') }}" class="btn btn-primary mb-3">Tambah Buku</a>
+
+        <a href="{{ route('login') }}" class="btn btn-success btn-sm">
+           Login Admin
+        </a>
 
         <!-- Header Title -->
         <h1 class="text-center-header mb-4">Daftar Buku</h1>
@@ -45,7 +44,7 @@
                     <th>Penulis</th>
                     <th>Harga</th>
                     <th>Tanggal Terbit</th>
-                    <th>Aksi</th>
+
                 </tr>
             </thead>
             <tbody>
@@ -56,16 +55,7 @@
                         <td>{{ $buku->penulis }}</td>
                         <td>{{ "Rp. ".number_format($buku->harga, 0, ',', '.') }}</td>
                         <td>{{ \Carbon\Carbon::parse($buku->tgl_terbit)->format('d/m/Y') }}</td>
-                        <td>
-                            <a href="{{ route('buku.edit', $buku->id) }}" class="btn btn-warning btn-sm">Edit</a>
-                            <form action="{{ route('buku.destroy', $buku->id) }}" method="POST" style="display:inline-block;">
-                                @csrf
-                                @method('DELETE')
-                                <button onclick="return confirm('Yakin mau di hapus?')" type="submit" class="btn btn-danger btn-sm">Hapus</button>
-                            </form>
-                            <button class="btn btn-info btn-sm" data-toggle="modal" data-target="#detailModal"
-                                    onclick="showDetail('{{ $buku->judul }}', '{{ $buku->penulis }}', '{{ $buku->harga }}', '{{ \Carbon\Carbon::parse($buku->tgl_terbit)->format('d-m-Y') }}')">Detail</button>
-                        </td>
+
                     </tr>
                 @endforeach
             </tbody>

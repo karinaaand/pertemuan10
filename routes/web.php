@@ -6,6 +6,7 @@ use App\Http\Controllers\PostController;
 use App\Http\Controllers\users;
 use App\Http\Controllers\posts2;
 use App\Http\Controllers\BukuController;
+use App\Http\Controllers\Auth\LoginRegisterController;
 
 
 
@@ -70,10 +71,23 @@ Route::get('/posts2', [posts2::class, 'index']);
 
 /*Pertemuan 5 dan 6*/
 Route::get('/buku', [BukuController::class, 'index']);
-Route::get('/bukudatatable', [BukuController::class, 'indexdatatable']);
+
+Route::get('/bukupublic', [BukuController::class, 'indexpublic'])->name('buku.index.public') ;
+Route::get('/admin/buku', [BukuController::class, 'indexadmin'])->name('buku.index.admin') ;
+
 Route::get('/buku/create', [BukuController::class, 'create'])->name('buku.create');
 Route::post('/buku', [BukuController::class, 'store'])->name('buku.store');
 Route::delete('/buku/{id}', [BukuController::class, 'destroy'])->name('buku.destroy');
 Route::put('/buku/edit/{id}', [BukuController::class, 'update'])->name('buku.update');
 Route::get('/buku/edit/{id}', [BukuController::class, 'edit'])->name('buku.edit');
 Route::get('/buku/search', [BukuController::class, 'search'])->name('buku.search');
+
+// praktikum 9
+Route::controller(LoginRegisterController::class)->group(function() {
+    Route::get('/register', 'register')->name('register');
+    Route::post('/store', 'store')->name('store');
+    Route::get('/login', 'login')->name('login');
+    Route::post('/authenticate', 'authenticate')->name('authenticate');
+    Route::get('/dashboard', 'dashboard')->name('dashboard');
+    Route::post('/logout', 'logout')->name('logout');
+   });

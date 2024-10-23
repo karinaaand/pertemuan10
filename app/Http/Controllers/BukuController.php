@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\Buku;
 use Illuminate\Pagination\Paginator;
+use Illuminate\Support\Facades\Auth;
+
 Paginator::useBootstrapFive();
 
 class BukuController extends Controller
@@ -13,16 +15,42 @@ class BukuController extends Controller
      * Display a listing of the resource.
      */
     // DataTables
-    public function indexdatatable()
+    public function __construct()
     {
+        $this->middleware('guest')->except(['indexadmin', 'create', 'store', 'edit', 'update', 'destroy']);
+    }
+
+    public function indexpublic()
+    {
+
 
         Paginator::useBootstrapFive();
         $data_buku = Buku::orderBy('id', 'desc')->get(); // Ambil semua data buku yang sudah diurutkan
         $total_buku = $data_buku->count(); // Menghitung jumlah total buku
         $total_harga = $data_buku->sum('harga'); // Menghitung jumlah total harga buku
-        return view('indexdatatable', compact('data_buku', 'total_buku', 'total_harga'));
+        return view('index_public', compact('data_buku', 'total_buku', 'total_harga'));
 
     }
+    public function indexadmin()
+    {
+        if (Auth::check()) {
+            Paginator::useBootstrapFive();
+        $data_buku = Buku::orderBy('id', 'desc')->get(); // Ambil semua data buku yang sudah diurutkan
+        $total_buku = $data_buku->count(); // Menghitung jumlah total buku
+        $total_harga = $data_buku->sum('harga'); // Menghitung jumlah total harga buku
+        return view('index_admin', compact('data_buku', 'total_buku', 'total_harga'));
+        }
+
+        return redirect()->route('login')
+                        ->withErrors([
+                            'email' => 'Please login to access the dashboard.',
+                        ])->onlyInput('email');
+
+
+
+    }
+
+
 
     //N0 3 tugas praktikum
     public function index(){
@@ -62,6 +90,12 @@ class BukuController extends Controller
      */
     public function create()
     {
+        if (!(Auth::check())) {
+            return redirect()->route('login')
+            ->withErrors([
+                'email' => 'Please login to access the dashboard.',
+            ])->onlyInput('email');
+        }
         return view('create');
     }
 
@@ -70,6 +104,13 @@ class BukuController extends Controller
      */
     public function store(Request $request)
 {
+    if (!(Auth::check())) {
+        return redirect()->route('login')
+        ->withErrors([
+            'email' => 'Please login to access the dashboard.',
+        ])->onlyInput('email');
+    }
+
     $this->validate($request, [
         'judul' => 'required|string',
         'penulis' => 'required|string|max:30',
@@ -108,6 +149,13 @@ class BukuController extends Controller
      */
     public function edit(string $id)
     {
+        if (!(Auth::check())) {
+            return redirect()->route('login')
+            ->withErrors([
+                'email' => 'Please login to access the dashboard.',
+            ])->onlyInput('email');
+        }
+
         $buku = Buku::find($id);
         return view('edit', compact('buku'));
     }
@@ -117,6 +165,13 @@ class BukuController extends Controller
      */
     public function update(Request $request, string $id)
     {
+        if (!(Auth::check())) {
+            return redirect()->route('login')
+            ->withErrors([
+                'email' => 'Please login to access the dashboard.',
+            ])->onlyInput('email');
+        }
+
         $validatedData = $request->validate([
             'judul' => 'required',
             'penulis' => 'required',
@@ -143,6 +198,12 @@ class BukuController extends Controller
      */
     public function destroy(string $id)
     {
+        if (!(Auth::check())) {
+            return redirect()->route('login')
+            ->withErrors([
+                'email' => 'Please login to access the dashboard.',
+            ])->onlyInput('email');
+        }
         $buku = Buku::find($id);
         $buku->delete();
 
