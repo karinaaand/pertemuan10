@@ -22,10 +22,10 @@ class RegistrationSuccess extends Mailable
 
     public function build()
     {
-        dd($this->data);
+        // dd($this->data);
 
         return $this->subject($this->data['subject'])
-                    ->view('emails.registration_success')
+                    ->view('emails.sendemail')
                     ->with([
                         'name' => $this->data['name'],
                         'email' => $this->data['email'],

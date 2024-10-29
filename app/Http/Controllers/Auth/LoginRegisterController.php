@@ -38,6 +38,7 @@ class LoginRegisterController extends Controller
      */
     public function store(Request $request)
     {
+
         $request->validate([
             'name' => 'required|string|max:250',
             'email' => 'required|email|max:250|unique:users',
@@ -49,6 +50,16 @@ class LoginRegisterController extends Controller
             'email' => $request->email,
             'password' => Hash::make($request->password)
         ]);
+
+        $data = [
+            'name' => $request->name,
+            'email' => $request->email,
+            'subject' => 'Selamat Datang di Aplikasi Kami!',
+        ];
+
+        // dd($data);
+
+        Mail::to($request->email)->send(new RegistrationSuccess($data));
 
         $credentials = $request->only('email', 'password');
         Auth::attempt($credentials);
@@ -85,15 +96,6 @@ class LoginRegisterController extends Controller
         if (Auth::attempt($credentials)) {
             $request->session()->regenerate();
 
-            $data = [
-                'name' => $request->name,
-                'email' => $request->email,
-                'subject' => 'Selamat Datang di Aplikasi Kami!',
-            ];
-            
-            dd($data);
-
-            Mail::to($request->email)->send(new RegistrationSuccess($data));
             return redirect()->route('dashboard')
                              ->withSuccess('You have successfully logged in!');
         }
