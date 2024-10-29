@@ -5,8 +5,10 @@ namespace App\Http\Controllers\Auth;
 use App\Models\User;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use App\Mail\RegistrationSuccess;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Mail;
 
 class LoginRegisterController extends Controller
 {
@@ -82,6 +84,16 @@ class LoginRegisterController extends Controller
 
         if (Auth::attempt($credentials)) {
             $request->session()->regenerate();
+
+            $data = [
+                'name' => $request->name,
+                'email' => $request->email,
+                'subject' => 'Selamat Datang di Aplikasi Kami!',
+            ];
+            
+            dd($data);
+
+            Mail::to($request->email)->send(new RegistrationSuccess($data));
             return redirect()->route('dashboard')
                              ->withSuccess('You have successfully logged in!');
         }
