@@ -92,7 +92,7 @@
             <strong>Jumlah Buku: {{ $total_buku }}</strong>
         </div>
 
-        <!-- Detail Modal -->
+        <!-- Detail 6Modal -->
         <div class="modal fade" id="detailModal" tabindex="-1" aria-labelledby="detailModalLabel" aria-hidden="true">
             <div class="modal-dialog">
                 <div class="modal-content">

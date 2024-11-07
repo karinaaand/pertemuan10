@@ -77,12 +77,25 @@ Route::get('/buku', [BukuController::class, 'index']);
 Route::get('/bukupublic', [BukuController::class, 'indexpublic'])->name('buku.index.public') ;
 Route::get('/admin/buku', [BukuController::class, 'indexadmin'])->name('buku.index.admin') ;
 
-Route::get('/buku/create', [BukuController::class, 'create'])->name('buku.create');
-Route::post('/buku', [BukuController::class, 'store'])->name('buku.store');
-Route::delete('/buku/{id}', [BukuController::class, 'destroy'])->name('buku.destroy');
-Route::put('/buku/edit/{id}', [BukuController::class, 'update'])->name('buku.update');
-Route::get('/buku/edit/{id}', [BukuController::class, 'edit'])->name('buku.edit');
-Route::get('/buku/search', [BukuController::class, 'search'])->name('buku.search');
+
+// cara pertama menggunakan menggunakan middleware
+Route::get('/buku/create', [BukuController::class, 'create'])->name('buku.create')->middleware('admin');
+Route::post('/buku', [BukuController::class, 'store'])->name('buku.store')->middleware('admin');
+Route::delete('/buku/{id}', [BukuController::class, 'destroy'])->name('buku.destroy')->middleware('admin');
+Route::put('/buku/edit/{id}', [BukuController::class, 'update'])->name('buku.update')->middleware('admin');
+Route::get('/buku/edit/{id}', [BukuController::class, 'edit'])->name('buku.edit')->middleware('admin');
+Route::get('/buku/search', [BukuController::class, 'search'])->name('buku.search')->middleware('admin');
+
+
+//cara kedua menggunakan menggunakan middleware
+// Route::middleware(['admin'])->group(function(){
+//     Route::get('/buku/create', [BukuController::class, 'create'])->name('buku.create');
+//     Route::post('/buku', [BukuController::class, 'store'])->name('buku.store');
+//     Route::delete('/buku/{id}', [BukuController::class, 'destroy'])->name('buku.destroy');
+//     Route::put('/buku/edit/{id}', [BukuController::class, 'update'])->name('buku.update');
+//     Route::get('/buku/edit/{id}', [BukuController::class, 'edit'])->name('buku.edit');
+//     Route::get('/buku/search', [BukuController::class, 'search'])->name('buku.search');
+// });
 
 // praktikum 9
 Route::controller(LoginRegisterController::class)->group(function() {
@@ -107,4 +120,6 @@ Route::controller(LoginRegisterController::class)->group(function() {
    Route::get('/home', function() {
        return view('home'); // Adjust this to your actual home view
    })->name('home');
+
+
 

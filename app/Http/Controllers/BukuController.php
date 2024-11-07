@@ -15,10 +15,10 @@ class BukuController extends Controller
      * Display a listing of the resource.
      */
     // DataTables
-    public function __construct()
-    {
-        $this->middleware('guest')->except(['indexadmin', 'create', 'store', 'edit', 'update', 'destroy']);
-    }
+    // public function __construct()
+    // {
+    //     $this->middleware('admin');
+    // }
 
     public function indexpublic()
     {
@@ -45,9 +45,6 @@ class BukuController extends Controller
                         ->withErrors([
                             'email' => 'Please login to access the dashboard.',
                         ])->onlyInput('email');
-
-
-
     }
 
 
@@ -90,12 +87,12 @@ class BukuController extends Controller
      */
     public function create()
     {
-        if (!(Auth::check())) {
-            return redirect()->route('login')
-            ->withErrors([
-                'email' => 'Please login to access the dashboard.',
-            ])->onlyInput('email');
-        }
+        // if (!(Auth::check())) {
+        //     return redirect()->route('login')
+        //     ->withErrors([
+        //         'email' => 'Please login to access the dashboard.',
+        //     ])->onlyInput('email');
+        // }
         return view('create');
     }
 
@@ -103,19 +100,21 @@ class BukuController extends Controller
      * Store a newly created resource in storage.
      */
     public function store(Request $request)
-{
-    if (!(Auth::check())) {
-        return redirect()->route('login')
-        ->withErrors([
-            'email' => 'Please login to access the dashboard.',
-        ])->onlyInput('email');
-    }
+    {
+    // if (!(Auth::check())) {
+    //     return redirect()->route('login')
+    //     ->withErrors([
+    //         'email' => 'Please login to access the dashboard.',
+    //     ])->onlyInput('email');
+    // }
 
+    // Validasi input dari request
     $this->validate($request, [
         'judul' => 'required|string',
         'penulis' => 'required|string|max:30',
         'harga' => 'required|numeric',
-        'tgl_terbit' => 'required|date'
+        'tgl_terbit' => 'required|date',
+        'photo' => 'image|nullable|max:1999'
     ], [
         'judul.required' => 'Kolom Judul Buku wajib diisi.',
         'penulis.required' => 'Kolom Nama Penulis wajib diisi.',
@@ -126,15 +125,33 @@ class BukuController extends Controller
         'tgl_terbit.date' => 'Kolom Tanggal Terbit tidak valid.'
     ]);
 
+    // Buat objek Buku baru dan isi datanya
     $buku = new Buku();
     $buku->judul = $request->judul;
     $buku->penulis = $request->penulis;
     $buku->harga = $request->harga;
     $buku->tgl_terbit = $request->tgl_terbit;
+
+    // Proses upload foto jika ada
+    if ($request->hasFile('photo')) {
+        $filenameWithExt = $request->file('photo')->getClientOriginalName();
+        $filename = pathinfo($filenameWithExt, PATHINFO_FILENAME);
+        $extension = $request->file('photo')->getClientOriginalExtension();
+        $filenameSimpan = $filename . '_' . time() . '.' . $extension;
+
+        // Simpan file di public/photos
+        $path = $request->file('photo')->storeAs('public/photos', $filenameSimpan);
+
+        // Simpan path ke database
+        $buku->photo = 'photos/' . $filenameSimpan;
+    }
+
+    // Simpan data buku ke database
     $buku->save();
 
-    return redirect('/buku')->with('pesan', 'Data Buku Berhasil disimpan');
-}
+    return redirect()->route('buku.index.admin')->with('pesan', 'Data Buku Berhasil disimpan');
+    }
+
 
     /**
      * Display the specified resource.
@@ -149,12 +166,12 @@ class BukuController extends Controller
      */
     public function edit(string $id)
     {
-        if (!(Auth::check())) {
-            return redirect()->route('login')
-            ->withErrors([
-                'email' => 'Please login to access the dashboard.',
-            ])->onlyInput('email');
-        }
+        // if (!(Auth::check())) {
+        //     return redirect()->route('login')
+        //     ->withErrors([
+        //         'email' => 'Please login to access the dashboard.',
+        //     ])->onlyInput('email');
+        // }
 
         $buku = Buku::find($id);
         return view('edit', compact('buku'));
@@ -165,12 +182,12 @@ class BukuController extends Controller
      */
     public function update(Request $request, string $id)
     {
-        if (!(Auth::check())) {
-            return redirect()->route('login')
-            ->withErrors([
-                'email' => 'Please login to access the dashboard.',
-            ])->onlyInput('email');
-        }
+        // if (!(Auth::check())) {
+        //     return redirect()->route('login')
+        //     ->withErrors([
+        //         'email' => 'Please login to access the dashboard.',
+        //     ])->onlyInput('email');
+        // }
 
         $validatedData = $request->validate([
             'judul' => 'required',
@@ -187,26 +204,44 @@ class BukuController extends Controller
         ]);
 
         $buku = Buku::findOrFail($id);
-        $buku->fill($validatedData); // Mengisi properti model dengan data yang divalidasi
-        $buku->save(); // Menyimpan perubahan ke database
 
-        return redirect('/buku')->with('pesan', 'Buku berhasil diperbarui.');
+        $buku->judul = $request->judul;
+        $buku->penulis = $request->penulis;
+        $buku->harga = $request->harga;
+        $buku->tgl_terbit = $request->tgl_terbit;
+
+        // Proses upload foto jika ada
+        if ($request->hasFile('photo')) {
+            $filenameWithExt = $request->file('photo')->getClientOriginalName();
+            $filename = pathinfo($filenameWithExt, PATHINFO_FILENAME);
+            $extension = $request->file('photo')->getClientOriginalExtension();
+            $filenameSimpan = $filename . '_' . time() . '.' . $extension;
+
+        // Simpan file di public/photos
+        $path = $request->file('photo')->storeAs('public/photos', $filenameSimpan);
+
+         // Simpan path ke database
+        $buku->photo = 'photos/' . $filenameSimpan;
+
     }
+        $buku->save(); // Menyimpan perubahan ke database
+        return redirect()->route('buku.index.admin')->with('pesan', 'Buku berhasil diperbarui.');
 
+    }
     /**
      * Remove the specified resource from storage.
      */
     public function destroy(string $id)
     {
-        if (!(Auth::check())) {
-            return redirect()->route('login')
-            ->withErrors([
-                'email' => 'Please login to access the dashboard.',
-            ])->onlyInput('email');
-        }
+        // if (!(Auth::check())) {
+        //     return redirect()->route('login')
+        //     ->withErrors([
+        //         'email' => 'Please login to access the dashboard.',
+        //     ])->onlyInput('email');
+        // }
         $buku = Buku::find($id);
         $buku->delete();
 
-        return redirect('/buku')->with('pesan', 'Buku berhasil dihapus.');
+        return redirect()->route('buku.index.admin')->with('pesan', 'Buku berhasil dihapus.');
     }
 }

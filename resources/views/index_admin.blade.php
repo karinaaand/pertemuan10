@@ -2,27 +2,23 @@
 @section('content')
 
     <!-- Session Message -->
-    @if(@Session::has('pesan'))
-        <div class="alert alert-success">{{ Session::get('pesan') }}</div>
+    @if(Session::has('pesan'))
+        <div class="alert alert-succes mb-4">{{ Session::get('pesan') }}</div>
     @endif
+
     <div class="container mt-5">
         <!-- Add Book Button -->
         <a href="{{ route('buku.create') }}" class="btn btn-primary mb-3">Tambah Buku</a>
 
         <!-- Header Title -->
-        <h1 class="text-center-header mb-4">Daftar Buku</h1>
-
-        {{-- <form action="{{ route('buku.search') }}" method="get">
-            @csrf
-            <input type="text" name="kata" class="form-control" placeholder="Cari ..."
-                   style="width: 30%; display: inline; margin-top: 10px; margin-bottom: 10px; float: right;">
-        </form> --}}
+        <h1 class="text-center mb-4">Daftar Buku</h1>
 
         <!-- Table for Book Data -->
         <table id="myTable" class="table table-striped table-bordered">
             <thead class="thead-dark">
                 <tr>
                     <th>Id</th>
+                    <th>Foto</th>
                     <th>Judul Buku</th>
                     <th>Penulis</th>
                     <th>Harga</th>
@@ -33,7 +29,8 @@
             <tbody>
                 @foreach ($data_buku as $index => $buku)
                     <tr>
-                        <td>{{ $index+1 }}</td>
+                        <td>{{ $index + 1 }}</td>
+                        <td><img src="{{ $buku->photo ? asset('storage/' . $buku->photo) : asset('storage/photo.jpg') }}" width="50px"></td>
                         <td>{{ $buku->judul }}</td>
                         <td>{{ $buku->penulis }}</td>
                         <td>{{ "Rp. ".number_format($buku->harga, 0, ',', '.') }}</td>
@@ -58,6 +55,7 @@
             <p><strong>Jumlah Total Buku:</strong> {{ $total_buku }}</p>
             <p><strong>Jumlah Total Harga:</strong> {{ "Rp. ".number_format($total_harga, 0, ',', '.') }}</p>
         </div>
+
         <!-- Additional Book Count Display -->
         <div>
             <strong>Jumlah Buku: {{ $total_buku }}</strong>
@@ -85,22 +83,29 @@
                 </div>
             </div>
         </div>
-
     </div>
+
     @stack('script')
-    @endsection
-    <script>
-        // Function to show detail modal
-        function showDetail(judul, penulis, harga, tanggal_terbit) {
-            document.getElementById('modalJudul').innerText = judul;
-            document.getElementById('modalPenulis').innerText = penulis;
-            document.getElementById('modalHarga').innerText = "Rp. " + parseFloat(harga).toLocaleString('id-ID', {minimumFractionDigits: 2});
-            document.getElementById('modalTanggalTerbit').innerText = tanggal_terbit;
-        }
+@endsection
 
-        // Initialize DataTables
-        $(document).ready(function() {
-            $('#myTable').DataTable();
-        });
-    </script>
+<!-- External Scripts -->
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.3/dist/umd/popper.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+<script src="https://cdn.datatables.net/1.10.21/js/jquery.dataTables.min.js"></script>
+<script src="https://cdn.datatables.net/1.10.21/js/dataTables.bootstrap4.min.js"></script>
 
+<script>
+    // Function to show detail modal
+    function showDetail(judul, penulis, harga, tanggal_terbit) {
+        document.getElementById('modalJudul').innerText = judul;
+        document.getElementById('modalPenulis').innerText = penulis;
+        document.getElementById('modalHarga').innerText = "Rp. " + parseFloat(harga).toLocaleString('id-ID', {minimumFractionDigits: 0});
+        document.getElementById('modalTanggalTerbit').innerText = tanggal_terbit;
+    }
+
+    // Initialize DataTables
+    $(document).ready(function() {
+        $('#myTable').DataTable();
+    });
+</script>

@@ -9,7 +9,7 @@ class Buku extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['judul', 'penulis', 'harga', 'tgl_terbit'];
+    protected $fillable = ['judul', 'penulis', 'harga', 'tgl_terbit', 'photo'];
     protected $table = 'books'; //Menginisiasi Tabel mana yang mau di panggil
     protected $dates = ['tgl_terbit'];
 }
