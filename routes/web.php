@@ -9,6 +9,8 @@ use App\Http\Controllers\posts2;
 use App\Http\Controllers\BukuController;
 use App\Http\Controllers\Auth\LoginRegisterController;
 use App\Http\Controllers\SendEmailController;
+use App\Http\Controllers\GalleryController;
+
 
 
 
@@ -122,4 +124,5 @@ Route::controller(LoginRegisterController::class)->group(function() {
    })->name('home');
 
 
-
+//Pertemuan 12
+   Route::resource('gallery', GalleryController::class);

@@ -13,6 +13,8 @@ return new class extends Migration
     {
         Schema::create('books', function (Blueprint $table) {
             $table->id();
+            $table->string('photo_original')->nullable();
+            $table->string('photo_square')->nullable();
             $table->string('judul');
             $table->string('penulis');
             $table->integer('harga');
@@ -26,6 +28,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        //
+        Schema::dropIfExists('books');
     }
 };

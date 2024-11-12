@@ -11,9 +11,13 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::table('books', function (Blueprint $table) {
-            $table->string('photo')->nullable();
-        });
+        Schema::create('uploads', function (Blueprint $table) {
+            $table->id();
+            $table->string('title', 200);
+            $table->mediumText('description')->nullable();
+            $table->string('picture')->nullable();
+            $table->timestamps();
+           });
     }
 
     /**
@@ -21,8 +25,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::table('books', function (Blueprint $table) {
-            $table->dropColumn('photo');
-        });
+        Schema::dropIfExists('uploads');
     }
 };

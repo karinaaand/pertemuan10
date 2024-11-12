@@ -6,6 +6,8 @@ use Illuminate\Http\Request;
 use App\Models\Buku;
 use Illuminate\Pagination\Paginator;
 use Illuminate\Support\Facades\Auth;
+use Intervention\Image\Laravel\Facades\Image;
+
 
 Paginator::useBootstrapFive();
 
@@ -29,28 +31,28 @@ class BukuController extends Controller
         $total_buku = $data_buku->count(); // Menghitung jumlah total buku
         $total_harga = $data_buku->sum('harga'); // Menghitung jumlah total harga buku
         return view('index_public', compact('data_buku', 'total_buku', 'total_harga'));
-
     }
     public function indexadmin()
     {
         if (Auth::check()) {
             Paginator::useBootstrapFive();
-        $data_buku = Buku::orderBy('id', 'desc')->get(); // Ambil semua data buku yang sudah diurutkan
-        $total_buku = $data_buku->count(); // Menghitung jumlah total buku
-        $total_harga = $data_buku->sum('harga'); // Menghitung jumlah total harga buku
-        return view('index_admin', compact('data_buku', 'total_buku', 'total_harga'));
+            $data_buku = Buku::orderBy('id', 'desc')->get(); // Ambil semua data buku yang sudah diurutkan
+            $total_buku = $data_buku->count(); // Menghitung jumlah total buku
+            $total_harga = $data_buku->sum('harga'); // Menghitung jumlah total harga buku
+            return view('index_admin', compact('data_buku', 'total_buku', 'total_harga'));
         }
 
         return redirect()->route('login')
-                        ->withErrors([
-                            'email' => 'Please login to access the dashboard.',
-                        ])->onlyInput('email');
+            ->withErrors([
+                'email' => 'Please login to access the dashboard.',
+            ])->onlyInput('email');
     }
 
 
 
     //N0 3 tugas praktikum
-    public function index(){
+    public function index()
+    {
         $batas = 10;
         $total_buku = Buku::count();
         $data_buku = Buku::orderBy('id', 'desc')->paginate($batas);
@@ -61,16 +63,17 @@ class BukuController extends Controller
     }
 
 
-    public function search(Request $request) {
+    public function search(Request $request)
+    {
         $batas = 5;
         $cari = $request->kata;
         $data_buku = Buku::where('judul', 'like', "%" . $cari . "%")
-                         ->orWhere('penulis', 'like', "%" . $cari . "%")
-                         ->paginate($batas);
+            ->orWhere('penulis', 'like', "%" . $cari . "%")
+            ->paginate($batas);
 
         $total_harga = 0;
-        foreach($data_buku as $buku){
-            $total_harga+=$buku->harga;
+        foreach ($data_buku as $buku) {
+            $total_harga += $buku->harga;
         }
 
         $total_buku = $data_buku->count();
@@ -101,55 +104,61 @@ class BukuController extends Controller
      */
     public function store(Request $request)
     {
-    // if (!(Auth::check())) {
-    //     return redirect()->route('login')
-    //     ->withErrors([
-    //         'email' => 'Please login to access the dashboard.',
-    //     ])->onlyInput('email');
-    // }
+        // if (!(Auth::check())) {
+        //     return redirect()->route('login')
+        //     ->withErrors([
+        //         'email' => 'Please login to access the dashboard.',
+        //     ])->onlyInput('email');
+        // }
 
-    // Validasi input dari request
-    $this->validate($request, [
-        'judul' => 'required|string',
-        'penulis' => 'required|string|max:30',
-        'harga' => 'required|numeric',
-        'tgl_terbit' => 'required|date',
-        'photo' => 'image|nullable|max:1999'
-    ], [
-        'judul.required' => 'Kolom Judul Buku wajib diisi.',
-        'penulis.required' => 'Kolom Nama Penulis wajib diisi.',
-        'penulis.max' => 'Kolom Nama Penulis tidak boleh lebih dari 30 karakter.',
-        'harga.required' => 'Kolom Harga Buku wajib diisi.',
-        'harga.numeric' => 'Kolom Harga Buku harus berupa angka.',
-        'tgl_terbit.required' => 'Kolom Tanggal Terbit wajib diisi.',
-        'tgl_terbit.date' => 'Kolom Tanggal Terbit tidak valid.'
-    ]);
+        // Validasi input dari request
+        $this->validate($request, [
+            'judul' => 'required|string',
+            'penulis' => 'required|string|max:30',
+            'harga' => 'required|numeric',
+            'tgl_terbit' => 'required|date',
+            'photo' => 'image|nullable|max:1999'
+        ], [
+            'judul.required' => 'Kolom Judul Buku wajib diisi.',
+            'penulis.required' => 'Kolom Nama Penulis wajib diisi.',
+            'penulis.max' => 'Kolom Nama Penulis tidak boleh lebih dari 30 karakter.',
+            'harga.required' => 'Kolom Harga Buku wajib diisi.',
+            'harga.numeric' => 'Kolom Harga Buku harus berupa angka.',
+            'tgl_terbit.required' => 'Kolom Tanggal Terbit wajib diisi.',
+            'tgl_terbit.date' => 'Kolom Tanggal Terbit tidak valid.'
+        ]);
 
-    // Buat objek Buku baru dan isi datanya
-    $buku = new Buku();
-    $buku->judul = $request->judul;
-    $buku->penulis = $request->penulis;
-    $buku->harga = $request->harga;
-    $buku->tgl_terbit = $request->tgl_terbit;
+        // Buat objek Buku baru dan isi datanya
+        $buku = new Buku();
+        $buku->judul = $request->judul;
+        $buku->penulis = $request->penulis;
+        $buku->harga = $request->harga;
+        $buku->tgl_terbit = $request->tgl_terbit;
 
-    // Proses upload foto jika ada
-    if ($request->hasFile('photo')) {
-        $filenameWithExt = $request->file('photo')->getClientOriginalName();
-        $filename = pathinfo($filenameWithExt, PATHINFO_FILENAME);
-        $extension = $request->file('photo')->getClientOriginalExtension();
-        $filenameSimpan = $filename . '_' . time() . '.' . $extension;
+        // Proses upload foto jika ada
+        if ($request->hasFile('photo')) {
+            $filenameWithExt = $request->file('photo')->getClientOriginalName();
+            $filename = pathinfo($filenameWithExt, PATHINFO_FILENAME);
+            $extension = $request->file('photo')->getClientOriginalExtension();
+            $filenameSimpan = $filename . '_' . time() . '.' . $extension;
 
-        // Simpan file di public/photos
-        $path = $request->file('photo')->storeAs('public/photos', $filenameSimpan);
+            // Simpan file di public/photos
+            $pathoriginal = $request->file('photo')->storeAs('photos_original', $filenameSimpan);
+            $pathsquare = $request->file('photo')->storeAs('photos_square', $filenameSimpan);
 
-        // Simpan path ke database
-        $buku->photo = 'photos/' . $filenameSimpan;
-    }
+            // create new image instance with 100 x 100
+            Image::read(storage_path().'/app/public/photos_square/'. $filenameSimpan)->resize(100, 100)->save();
 
-    // Simpan data buku ke database
-    $buku->save();
 
-    return redirect()->route('buku.index.admin')->with('pesan', 'Data Buku Berhasil disimpan');
+            // Simpan path ke database
+            $buku->photo_original = 'photos_original/' . $filenameSimpan;
+            $buku->photo_square = 'photos_square/' . $filenameSimpan;
+        }
+
+        // Simpan data buku ke database
+        $buku->save();
+
+        return redirect()->route('buku.index.admin')->with('pesan', 'Data Buku Berhasil disimpan');
     }
 
 
@@ -217,16 +226,14 @@ class BukuController extends Controller
             $extension = $request->file('photo')->getClientOriginalExtension();
             $filenameSimpan = $filename . '_' . time() . '.' . $extension;
 
-        // Simpan file di public/photos
-        $path = $request->file('photo')->storeAs('public/photos', $filenameSimpan);
+            // Simpan file di public/photos
+            $path = $request->file('photo')->storeAs('public/photos', $filenameSimpan);
 
-         // Simpan path ke database
-        $buku->photo = 'photos/' . $filenameSimpan;
-
-    }
+            // Simpan path ke database
+            $buku->photo = 'photos/' . $filenameSimpan;
+        }
         $buku->save(); // Menyimpan perubahan ke database
         return redirect()->route('buku.index.admin')->with('pesan', 'Buku berhasil diperbarui.');
-
     }
     /**
      * Remove the specified resource from storage.

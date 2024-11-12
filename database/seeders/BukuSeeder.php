@@ -20,6 +20,7 @@ class BukuSeeder extends Seeder
                 'penulis' => fake()->name(),
                 'harga' => fake()->numberBetween(10000, 50000),
                 'tgl_terbit' => fake()->date(),
+                'photo' => null,
             ]);
         }
     }

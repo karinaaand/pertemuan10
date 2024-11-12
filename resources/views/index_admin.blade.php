@@ -30,7 +30,7 @@
                 @foreach ($data_buku as $index => $buku)
                     <tr>
                         <td>{{ $index + 1 }}</td>
-                        <td><img src="{{ $buku->photo ? asset('storage/' . $buku->photo) : asset('storage/photo.jpg') }}" width="50px"></td>
+                        <td><img src="{{ $buku->photo_square ? asset('storage/' . $buku->photo_square) : asset('storage/photo.jpg') }}" width="50px"></td>
                         <td>{{ $buku->judul }}</td>
                         <td>{{ $buku->penulis }}</td>
                         <td>{{ "Rp. ".number_format($buku->harga, 0, ',', '.') }}</td>
@@ -43,7 +43,7 @@
                                 <button onclick="return confirm('Yakin mau di hapus?')" type="submit" class="btn btn-danger btn-sm">Hapus</button>
                             </form>
                             <button class="btn btn-info btn-sm" data-toggle="modal" data-target="#detailModal"
-                                    onclick="showDetail('{{ $buku->judul }}', '{{ $buku->penulis }}', '{{ $buku->harga }}', '{{ \Carbon\Carbon::parse($buku->tgl_terbit)->format('d-m-Y') }}')">Detail</button>
+                                    onclick="showDetail('{{ $buku->photo_original }}', '{{ $buku->judul }}', '{{ $buku->penulis }}', '{{ $buku->harga }}', '{{ \Carbon\Carbon::parse($buku->tgl_terbit)->format('d-m-Y') }}')">Detail</button>
                         </td>
                     </tr>
                 @endforeach
@@ -63,8 +63,8 @@
 
         <!-- Detail Modal -->
         <div class="modal fade" id="detailModal" tabindex="-1" aria-labelledby="detailModalLabel" aria-hidden="true">
-            <div class="modal-dialog">
-                <div class="modal-content">
+            <div class="modal-dialog" style="max-width: fit-content; height: auto;">
+                <div class="modal-content" style="width: fit-content; height: auto;">
                     <div class="modal-header">
                         <h5 class="modal-title" id="detailModalLabel">Detail Buku</h5>
                         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
@@ -76,6 +76,7 @@
                         <p><strong>Penulis:</strong> <span id="modalPenulis"></span></p>
                         <p><strong>Harga:</strong> <span id="modalHarga"></span></p>
                         <p><strong>Tanggal Terbit:</strong> <span id="modalTanggalTerbit"></span></p>
+                        <img src="" id="modalPhoto">
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" data-dismiss="modal">Tutup</button>
@@ -97,7 +98,8 @@
 
 <script>
     // Function to show detail modal
-    function showDetail(judul, penulis, harga, tanggal_terbit) {
+    function showDetail(photo, judul, penulis, harga, tanggal_terbit) {
+        document.getElementById('modalPhoto').src = "{{ asset('storage') }}/" + photo;
         document.getElementById('modalJudul').innerText = judul;
         document.getElementById('modalPenulis').innerText = penulis;
         document.getElementById('modalHarga').innerText = "Rp. " + parseFloat(harga).toLocaleString('id-ID', {minimumFractionDigits: 0});

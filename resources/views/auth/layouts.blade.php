@@ -10,6 +10,8 @@
     <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
     <!-- DataTables CSS with Bootstrap 4 integration -->
     <link rel="stylesheet" href="https://cdn.datatables.net/1.10.21/css/dataTables.bootstrap4.min.css">
+    <link rel="stylesheet" href="{{ asset('lightbox2/dist/css/lightbox.min.css')
+}}">
 
     <style>
         /* CSS for centering the table header */
@@ -54,6 +56,11 @@
                         </li>
                         </ul>
                     </li>
+
+                    <li class="nav-item">
+                        <a class="nav-link {{ (request()->is('gallery')) ? 'active' : '' }}" href="{{
+                    route('gallery.index') }}">Gallery</a>
+                    </li>
                 @endguest
             </ul>
           </div>
@@ -72,6 +79,9 @@
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 <script src="https://cdn.datatables.net/1.10.21/js/jquery.dataTables.min.js"></script>
 <script src="https://cdn.datatables.net/1.10.21/js/dataTables.bootstrap4.min.js"></script>
+
+<script src="{{ asset('lightbox2/dist/js/lightbox-plus-jquery.min.js')
+}}"></script>
 
 </body>
 </html>
