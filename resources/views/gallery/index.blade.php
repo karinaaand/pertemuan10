@@ -18,8 +18,11 @@
                                             data-lightbox="roadtrip" data-title="{{ $gallery->description }}">
                                             <img class="example-image img-fluid mb-2"
                                                 src="{{ asset('storage/photosnew/' . $gallery->picture) }}"
-                                                alt="image-1" />
+                                                alt="image-1">
                                         </a>
+
+
+
                                     </div>
                                 </div>
                             @endforeach

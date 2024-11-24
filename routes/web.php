@@ -14,6 +14,7 @@ use App\Http\Controllers\GalleryController;
 
 
 
+
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -126,3 +127,11 @@ Route::controller(LoginRegisterController::class)->group(function() {
 
 //Pertemuan 12
    Route::resource('gallery', GalleryController::class);
+
+
+
+
+
+Route::get('/items', function () {
+    return view('items');
+});
